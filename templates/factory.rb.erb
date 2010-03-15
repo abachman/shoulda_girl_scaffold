@@ -1,0 +1,22 @@
+Factory.define :<%= singular_name %> do |f|
+  # the following attributes are "not null" in the database and must be defined:
+  <% singular_name.classify.constantize.columns.select{|c| !c.null && c.name != "id"}.each do |c| -%>
+  f.<%= c.name %> <%= c.type == :integer ? "1" : "\"foo\"" %>
+  <% end -%>
+end
+
+Factory.define :changed_<%= singular_name %>, :parent => :<%= singular_name %> do |f|
+  # Put a changed version here to check saving
+  # You only need to change one attribute
+  <% singular_name.classify.constantize.columns.select{|c| !c.null && c.name != "id"}.each do |c| -%>
+  f.<%= c.name %> <%= c.type == :integer ? "2" : "\"bar\"" %>
+  <% end -%>
+end
+
+Factory.define :invalid_<%= singular_name %>, :parent => :<%= singular_name %> do |f|
+  # Put an invalid version here to ensure error handling
+  # You only need to put one invalid attribute
+  <% singular_name.classify.constantize.columns.select{|c| !c.null && c.name != "id"}.each do |c| -%>
+  f.<%= c.name %> "" 
+  <% end -%>
+end

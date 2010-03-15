@@ -1,0 +1,8 @@
+- content_for :title, "<%= class_name %> #{h @<%= singular_name %>.id}"
+%table
+  - @<%= singular_name %>.attributes.each do |a,v|
+    %tr
+      %td= h a
+      %td= h v
+%p= link_to "< Back to <%= plural_name %>", <%= index_path %>
+

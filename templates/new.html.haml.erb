@@ -1,0 +1,8 @@
+- content_for :title, "New <%= class_name %>"
+- form_for @<%= singular_name %>, :url => { :action => :create } do |f|
+  = error_messages_for :<%= singular_name %>
+  = render :partial => 'fields', :locals => {:f => f}
+  %p
+    = f.submit
+    = link_to "Cancel", <%= index_path %>
+

@@ -1,0 +1,46 @@
+class <%= class_name %>sController < ApplicationController
+  find_or_redirect :only => [:edit, :update, :show, :destroy]
+
+  def index
+    @<%= plural_name %> = <%= singular_name.classify %>.all
+  end
+
+  def show
+  end
+
+  def new
+    @<%= singular_name %> = <%= singular_name.classify %>.new
+  end
+
+  def create
+    @<%= singular_name %> = <%= singular_name.classify %>.new(params[:<%= singular_name %>])
+    if @<%= singular_name%>.save
+      flash[:info] = "<%= singular_name.classify %> Created"
+      redirect_to <%= show_path %>(@<%= singular_name %>)
+    else
+      render :action => 'new'
+    end
+  end
+
+  def edit
+  end
+  
+  def update
+    if @<%= singular_name %>.update_attributes(params[:<%= singular_name %>])
+      flash[:info] = "<%= singular_name.classify %> Updated"
+      redirect_to <%= show_path %>(@<%= singular_name %>)
+    else
+      render :action => 'edit'
+    end
+  end
+  
+  def destroy
+    if @<%= singular_name %>.destroy
+      flash[:info] = "<%= singular_name.classify %> Deleted"
+    else
+      flash[:error] = "Could not delete that <%= singular_name.classify %>"
+    end
+    redirect_to <%= index_path %>
+  end
+end
+

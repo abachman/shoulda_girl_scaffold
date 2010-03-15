@@ -1,0 +1,106 @@
+require 'pathname'
+require Pathname(__FILE__).ascend { |d|
+  h = d + 'test_helper.rb'; break h if h.file? }
+
+class <%= class_name %>ControllerTest < ActionController::TestCase
+  context "on GET to :index" do
+    setup do
+      get :index
+    end
+    should_respond_with :success
+    should_render_template 'index'
+    should_assign_to :<%= plural_name %>
+  end
+
+  context "on GET to :new" do
+    setup do
+      get :new
+    end
+    should_respond_with :success
+    should_assign_to :<%= singular_name %>
+  end
+  
+  context "on POST to :create with valid attributes" do
+    setup do
+      post :create, :<%= singular_name %> => Factory.attributes_for(:<%= singular_name %>)
+    end
+    should_set_the_flash_to(/Created/)
+    should_respond_with :redirect
+    should_change("<%= singular_name.classify %>.count"){ <%= singular_name.classify %>.count }
+  end
+  
+  context "on POST to :create with invalid attributes" do
+    setup do
+      post :create, :<%= singular_name %> => { }
+    end
+    should_respond_with :success
+    should_render_template 'new'
+    should_not_change("<%= singular_name.classify %>.count"){ <%= singular_name.classify %>.count }
+  end
+  
+  context "on GET to :edit with bad id" do
+    setup do
+      get :edit, :id => -1
+    end
+    should_redirect_to("<%= index_path %>"){ <%= index_path %> }
+  end
+  
+  context "with a <%= singular_name %>" do
+    setup do
+      @<%= singular_name %> = Factory :<%= singular_name %>
+    end
+    
+    context "on GET to :show" do
+      setup do
+        get :show, :id => @<%= singular_name %>.id
+      end
+      should_respond_with :success
+      should_render_template 'show'
+      should_assign_to :<%= singular_name %>
+    end
+
+    context "on GET to :edit" do
+      setup do
+        get :edit, :id => @<%= singular_name %>.id
+      end
+      should_respond_with :success
+      should_render_template 'edit'
+      should_assign_to :<%= singular_name %>
+    end
+    
+    context "on PUT to :update" do
+      setup do
+        put(
+          :update,
+          :id => @<%= singular_name %>.id,
+          :<%= singular_name %> => Factory.attributes_for(:changed_<%= singular_name %>)
+        )
+      end
+      should_redirect_to("<%= singular_name %>_path"){ <%= show_path %>(@<%= singular_name %>) }
+      should_set_the_flash_to(/Updated/)
+      should_change("<%= singular_name %>"){ @<%= singular_name %>.reload.attributes }
+    end
+    
+    context "on PUT to :update with invalid data" do
+      setup do
+        put(
+          :update,
+          :id => @<%= singular_name %>.id,
+          :<%= singular_name %> => Factory.attributes_for(:invalid_<%= singular_name %>)
+        )
+      end
+      should_render_template 'edit'
+      should_not_change("<%= singular_name %>"){ @<%= singular_name %>.reload.attributes }
+    end
+    
+    context "on DELETE to :destroy" do
+      setup do
+        delete :destroy, :id => @<%= singular_name %>.id
+      end
+      should_redirect_to("<%= index_path %>"){ <%= index_path %> }
+      should_set_the_flash_to(/Deleted/)
+      should_change("<%= singular_name.classify %>.count", :by => -1){ <%= singular_name.classify %>.count }
+    end
+  end
+end
+

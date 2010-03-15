@@ -1,0 +1,10 @@
+- content_for :title, "<%= class_name %>"
+%ul
+  - @<%= plural_name %>.each do |<%= singular_name %>|
+    %li
+      = link_to "<%= class_name %> #{<%= singular_name %>.id}", <%= show_path %>(<%= singular_name %>)
+      = link_to "Edit", edit_<%= show_path %>(<%= singular_name %>)
+      = link_to "Delete", <%= show_path %>(<%= singular_name %>), :method => :delete, :confirm => "Are you sure?"
+        
+%p= link_to "New <%= class_name %>", new_<%= show_path %>
+
